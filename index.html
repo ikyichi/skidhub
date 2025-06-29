@@ -3,39 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkidHub Elite | Now With Real Skidding</title>
+    <title>SkidHub Elite v3.0 | GitHub Repo Explorer</title>
     <style>
         body { font-family: 'Courier New', monospace; background: #0d1117; color: #58a6ff; text-align: center; margin: 0; padding: 20px; }
         .header { background: #161b22; padding: 20px; border-bottom: 1px solid #30363d; }
         h1 { color: #f85149; }
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         input, button { padding: 10px; margin: 5px; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; }
         button { background: #238636; color: white; cursor: pointer; }
         button:hover { background: #2ea043; }
         #output { background: #161b22; padding: 15px; border-radius: 6px; margin-top: 20px; text-align: left; font-family: monospace; white-space: pre-wrap; }
         .disclaimer { font-size: 0.8em; opacity: 0.6; margin-top: 30px; }
         .uwu-mode { filter: hue-rotate(90deg); }
+        #fileViewer { max-height: 500px; overflow-y: auto; text-align: left; background: #0a0d12; padding: 15px; border-radius: 6px; }
+        .file-item { padding: 5px; cursor: pointer; }
+        .file-item:hover { background: #1f2937; }
+        .breadcrumb { margin-bottom: 10px; font-size: 0.9em; }
+        .breadcrumb a { color: #58a6ff; text-decoration: none; }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>SkidHub Elite v2.0</h1>
-        <p>"Now with *real* skidding (maybe)"</p>
+        <h1>SkidHub Elite v3.0</h1>
+        <p>"Now with GitHub repo browsing (and totally legal skidding)"</p>
         <button onclick="toggleUwU()">Toggle UwU Mode 🐾</button>
     </div>
 
     <div class="container">
-        <h2>🚀 Advanced GitHub Repo Skidder</h2>
-        <p><em>(Hypothetically bypasses restrictions. UwU.)</em></p>
+        <h2>🔍 GitHub Repository Explorer</h2>
+        <p><em>(View public repo files like a cool hacker)</em></p>
         
-        <input type="text" id="repoUrl" placeholder="https://github.com/owner/private-repo" size="50">
-        <button onclick="skidRepo()">SKID IT (FOR REAL)</button>
+        <input type="text" id="repoUrl" placeholder="https://github.com/owner/repo" size="50">
+        <button onclick="exploreRepo()">EXPLORE REPO</button>
+        <button onclick="downloadRepo()" style="background: #f85149;">HYPOTHETICAL DOWNLOAD</button>
         
-        <div id="output">[+] Ready to skid. UwU. [+]</div>
+        <div id="output">[+] Enter a GitHub repo URL to begin. [+]</div>
+        
+        <div id="fileViewer">
+            <!-- Files will appear here -->
+        </div>
     </div>
 
     <script>
         let uwuEnabled = false;
+        let currentRepo = '';
+        let currentPath = '';
 
         function toggleUwU() {
             uwuEnabled = !uwuEnabled;
@@ -45,7 +57,7 @@
                 : '[*] UwU mode deactivated. Boring. [*]';
         }
 
-        function skidRepo() {
+        function exploreRepo() {
             const repoUrl = document.getElementById('repoUrl').value;
             const output = document.getElementById('output');
             
@@ -54,33 +66,129 @@
                 return;
             }
 
-            output.textContent = `[+] Attempting to skid: ${repoUrl}...\n`;
+            // Extract owner and repo name
+            const parts = repoUrl.replace('https://github.com/', '').split('/');
+            if (parts.length < 2) {
+                output.textContent = '[-] Please include both owner and repo name [-]';
+                return;
+            }
 
-            // "Hypothetical" skidding logic
+            const owner = parts[0];
+            const repo = parts[1];
+            currentRepo = `${owner}/${repo}`;
+            currentPath = '';
+
+            output.textContent = `[+] Exploring repo: ${currentRepo}... [+]`;
+            
+            fetchRepoContents(owner, repo);
+        }
+
+        function fetchRepoContents(owner, repo, path = '') {
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+            const fileViewer = document.getElementById('fileViewer');
+            
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "Not Found") {
+                        fileViewer.innerHTML = '[-] Repository not found or is private [-]';
+                        return;
+                    }
+
+                    let html = `<div class="breadcrumb">`;
+                    if (path) {
+                        const pathParts = path.split('/');
+                        let currentPath = '';
+                        html += `<a href="#" onclick="navigateTo('${owner}', '${repo}', '')">${repo}</a> / `;
+                        pathParts.forEach((part, index) => {
+                            currentPath += (currentPath ? '/' : '') + part;
+                            if (index < pathParts.length - 1) {
+                                html += `<a href="#" onclick="navigateTo('${owner}', '${repo}', '${currentPath}')">${part}</a> / `;
+                            } else {
+                                html += part;
+                            }
+                        });
+                    } else {
+                        html += repo;
+                    }
+                    html += `</div>`;
+
+                    data.forEach(item => {
+                        if (item.type === 'dir') {
+                            html += `<div class="file-item" onclick="navigateTo('${owner}', '${repo}', '${item.path}')">📁 ${item.name}</div>`;
+                        } else {
+                            html += `<div class="file-item" onclick="viewFile('${owner}', '${repo}', '${item.path}')">📄 ${item.name}</div>`;
+                        }
+                    });
+
+                    fileViewer.innerHTML = html;
+                })
+                .catch(error => {
+                    fileViewer.innerHTML = '[-] Error fetching repository contents [-]';
+                    console.error(error);
+                });
+        }
+
+        function navigateTo(owner, repo, path) {
+            currentPath = path;
+            fetchRepoContents(owner, repo, path);
+        }
+
+        function viewFile(owner, repo, path) {
+            const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/master/${path}`;
+            const fileViewer = document.getElementById('fileViewer');
+            
+            fetch(rawUrl)
+                .then(response => response.text())
+                .then(text => {
+                    fileViewer.innerHTML = `
+                        <div class="breadcrumb">
+                            <a href="#" onclick="navigateTo('${owner}', '${repo}', '${path.split('/').slice(0, -1).join('/')}')">← Back</a>
+                        </div>
+                        <pre>${escapeHtml(text)}</pre>
+                    `;
+                })
+                .catch(error => {
+                    fileViewer.innerHTML = '[-] Error fetching file content [-]';
+                    console.error(error);
+                });
+        }
+
+        function downloadRepo() {
+            const output = document.getElementById('output');
+            if (!currentRepo) {
+                output.textContent = '[-] Please explore a repo first [-]';
+                return;
+            }
+
+            output.textContent = `[+] Hypothetically downloading ${currentRepo}... [+]`;
+            
             setTimeout(() => {
-                output.textContent += '[+] Bypassing access checks... (maybe)\n';
-                output.textContent += '[+] Using "advanced" skid techniques...\n';
+                output.textContent += '\n[+] Using "advanced" skid techniques... [+]';
+                output.textContent += '\n[+] Bypassing GitHub API limits (not really)... [+]';
+                output.textContent += '\n[+] Creating zip archive (in theory)... [+]';
+                output.textContent += `\n[+] Hypothetical download complete: ${currentRepo.split('/')[1]}_skid.zip [+]`;
                 
                 if (uwuEnabled) {
-                    output.textContent += '[+] UwU-fying variables... nyaa~\n';
+                    output.textContent += '\n[*] Nyaa~ Happy skidding! 🐾 [*]';
                 } else {
-                    output.textContent += '[+] Renaming variables for "originality"...\n';
-                }
-
-                output.textContent += '[+] Force-pushing to your GitHub... (hypothetically)\n';
-                output.textContent += `[+] SUCCESS! Skidded repo: ${repoUrl.split('/').pop()}_skid\n`;
-                
-                if (uwuEnabled) {
-                    output.textContent += '\n[*] Skidding complete! Nyaa~ 🐾 [*]';
-                } else {
-                    output.textContent += '\n[*] Skidding complete! (No UwU, sad.) [*]';
+                    output.textContent += '\n[*] Download complete! (No UwU, sad.) [*]';
                 }
             }, 2000);
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
     </script>
 
     <div class="disclaimer">
-        <p>⚠️ This tool is purely satirical. SkidHub does not condone actual skidding. ⚠️</p>
+        <p>⚠️ This tool uses GitHub's public API to view repository contents. It does not actually download private repos. ⚠️</p>
     </div>
 </body>
 </html>
