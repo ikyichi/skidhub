@@ -3,103 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkidHub Elite | "Unofficial" GitHub Access</title>
+    <title>SkidHub Elite | Now With Real Skidding</title>
     <style>
-        body {
-            font-family: 'Courier New', monospace;
-            background: #0d1117;
-            color: #58a6ff;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        .header {
-            background: #161b22;
-            padding: 20px;
-            border-bottom: 1px solid #30363d;
-        }
-        h1 {
-            color: #f85149;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        input, button {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 6px;
-            border: 1px solid #30363d;
-            background: #161b22;
-            color: #c9d1d9;
-        }
-        button {
-            background: #238636;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #2ea043;
-        }
-        #output {
-            background: #161b22;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 20px;
-            text-align: left;
-            font-family: monospace;
-            white-space: pre-wrap;
-        }
-        .disclaimer {
-            font-size: 0.8em;
-            opacity: 0.6;
-            margin-top: 30px;
-        }
+        body { font-family: 'Courier New', monospace; background: #0d1117; color: #58a6ff; text-align: center; margin: 0; padding: 20px; }
+        .header { background: #161b22; padding: 20px; border-bottom: 1px solid #30363d; }
+        h1 { color: #f85149; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        input, button { padding: 10px; margin: 5px; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; }
+        button { background: #238636; color: white; cursor: pointer; }
+        button:hover { background: #2ea043; }
+        #output { background: #161b22; padding: 15px; border-radius: 6px; margin-top: 20px; text-align: left; font-family: monospace; white-space: pre-wrap; }
+        .disclaimer { font-size: 0.8em; opacity: 0.6; margin-top: 30px; }
+        .uwu-mode { filter: hue-rotate(90deg); }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>SkidHub Elite</h1>
-        <p>"Accessing repos since... well, today."</p>
+        <h1>SkidHub Elite v2.0</h1>
+        <p>"Now with *real* skidding (maybe)"</p>
+        <button onclick="toggleUwU()">Toggle UwU Mode 🐾</button>
     </div>
 
     <div class="container">
-        <h2>🚀 Advanced GitHub Repo Downloader</h2>
-        <p><em>(Hypothetically bypasses restrictions. Maybe.)</em></p>
+        <h2>🚀 Advanced GitHub Repo Skidder</h2>
+        <p><em>(Hypothetically bypasses restrictions. UwU.)</em></p>
         
         <input type="text" id="repoUrl" placeholder="https://github.com/owner/private-repo" size="50">
-        <button onclick="skidRepo()">SKID IT</button>
+        <button onclick="skidRepo()">SKID IT (FOR REAL)</button>
         
-        <div id="output">[+] Ready to skid. [+]</div>
+        <div id="output">[+] Ready to skid. UwU. [+]</div>
     </div>
 
     <script>
+        let uwuEnabled = false;
+
+        function toggleUwU() {
+            uwuEnabled = !uwuEnabled;
+            document.body.classList.toggle('uwu-mode');
+            document.getElementById('output').textContent = uwuEnabled 
+                ? '[*] UwU mode activated! Nyaa~ [*]' 
+                : '[*] UwU mode deactivated. Boring. [*]';
+        }
+
         function skidRepo() {
             const repoUrl = document.getElementById('repoUrl').value;
             const output = document.getElementById('output');
             
             if (!repoUrl.includes('github.com')) {
-                output.textContent = '[-] Invalid GitHub URL. Try again. [-]';
+                output.textContent = '[-] Invalid GitHub URL. Try again. UwU. [-]';
                 return;
             }
 
             output.textContent = `[+] Attempting to skid: ${repoUrl}...\n`;
 
-            // Hypothetical "advanced" method (wink wink)
+            // "Hypothetical" skidding logic
             setTimeout(() => {
-                output.textContent += '[+] Bypassing access checks... (hypothetically)\n';
-                output.textContent += '[+] Cloning repo without credentials...\n';
-                output.textContent += '[+] Stripping .git history...\n';
-                output.textContent += '[+] Renaming variables for "originality"...\n';
-                output.textContent += `[+] SUCCESS! Hypothetically saved as: ${repoUrl.split('/').pop()}_skid\n`;
-                output.textContent += '\n[!] Disclaimer: This is a joke. Please do not abuse GitHub.\n';
+                output.textContent += '[+] Bypassing access checks... (maybe)\n';
+                output.textContent += '[+] Using "advanced" skid techniques...\n';
+                
+                if (uwuEnabled) {
+                    output.textContent += '[+] UwU-fying variables... nyaa~\n';
+                } else {
+                    output.textContent += '[+] Renaming variables for "originality"...\n';
+                }
+
+                output.textContent += '[+] Force-pushing to your GitHub... (hypothetically)\n';
+                output.textContent += `[+] SUCCESS! Skidded repo: ${repoUrl.split('/').pop()}_skid\n`;
+                
+                if (uwuEnabled) {
+                    output.textContent += '\n[*] Skidding complete! Nyaa~ 🐾 [*]';
+                } else {
+                    output.textContent += '\n[*] Skidding complete! (No UwU, sad.) [*]';
+                }
             }, 2000);
         }
     </script>
 
     <div class="disclaimer">
-        <p>⚠️ This tool is purely satirical. SkidHub does not condone unauthorized access to repositories. ⚠️</p>
+        <p>⚠️ This tool is purely satirical. SkidHub does not condone actual skidding. ⚠️</p>
     </div>
 </body>
 </html>
