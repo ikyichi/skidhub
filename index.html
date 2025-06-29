@@ -3,91 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SKIDHUB | Home of the Elite Skidders</title>
+    <title>SkidHub Elite | "Unofficial" GitHub Access</title>
     <style>
-        /* Stolen from some random Bootstrap template */
         body {
             font-family: 'Courier New', monospace;
-            background-color: #0d1117;
+            background: #0d1117;
             color: #58a6ff;
             text-align: center;
             margin: 0;
-            padding: 0;
-        }
-        .skid-header {
             padding: 20px;
+        }
+        .header {
             background: #161b22;
+            padding: 20px;
             border-bottom: 1px solid #30363d;
         }
-        .skid-title {
-            font-size: 3em;
-            margin: 0;
+        h1 {
             color: #f85149;
         }
-        .skid-subtitle {
-            font-size: 1.2em;
-            opacity: 0.8;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        .skid-nav {
-            margin: 20px 0;
-        }
-        .skid-button {
-            display: inline-block;
-            padding: 10px 20px;
+        input, button {
+            padding: 10px;
             margin: 5px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            background: #161b22;
+            color: #c9d1d9;
+        }
+        button {
             background: #238636;
             color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
+            cursor: pointer;
         }
-        .skid-button:hover {
+        button:hover {
             background: #2ea043;
         }
-        .skid-footer {
-            margin-top: 50px;
-            padding: 20px;
+        #output {
+            background: #161b22;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            text-align: left;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .disclaimer {
             font-size: 0.8em;
             opacity: 0.6;
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
-    <div class="skid-header">
-        <h1 class="skid-title">SKIDHUB</h1>
-        <p class="skid-subtitle">"We Ctrl+C so you don't have to Ctrl+Z."</p>
+    <div class="header">
+        <h1>SkidHub Elite</h1>
+        <p>"Accessing repos since... well, today."</p>
     </div>
 
-    <div class="skid-nav">
-        <a href="#repos" class="skid-button">SKID REPOS</a>
-        <a href="#tutorials" class="skid-button">HOW TO SKID</a>
-        <a href="#about" class="skid-button">WHY WE SKID</a>
+    <div class="container">
+        <h2>🚀 Advanced GitHub Repo Downloader</h2>
+        <p><em>(Hypothetically bypasses restrictions. Maybe.)</em></p>
+        
+        <input type="text" id="repoUrl" placeholder="https://github.com/owner/private-repo" size="50">
+        <button onclick="skidRepo()">SKID IT</button>
+        
+        <div id="output">[+] Ready to skid. [+]</div>
     </div>
 
-    <div id="repos">
-        <h2>🔥 ELITE SKIDDED REPOS 🔥</h2>
-        <p><em>(You can add your Novoline/Tenacity/whatever skids here later.)</em></p>
-        <!-- MASTER SKIDDER NOTE: Just paste your GitHub embeds here -->
-    </div>
+    <script>
+        function skidRepo() {
+            const repoUrl = document.getElementById('repoUrl').value;
+            const output = document.getElementById('output');
+            
+            if (!repoUrl.includes('github.com')) {
+                output.textContent = '[-] Invalid GitHub URL. Try again. [-]';
+                return;
+            }
 
-    <div id="tutorials">
-        <h2>📜 THE ART OF SKIDDING 📜</h2>
-        <pre>
-Step 1: Find a cool project.
-Step 2: git clone --depth=1 (we don't need history)
-Step 3: Rename variables (optional)
-Step 4: git push --force (claim it as yours)
-Step 5: Profit.
-        </pre>
-    </div>
+            output.textContent = `[+] Attempting to skid: ${repoUrl}...\n`;
 
-    <div id="about">
-        <h2>🤔 WHY SKIDHUB?</h2>
-        <p>Because writing code is <strong>hard</strong>, but skidding is <strong>art</strong>.</p>
-    </div>
+            // Hypothetical "advanced" method (wink wink)
+            setTimeout(() => {
+                output.textContent += '[+] Bypassing access checks... (hypothetically)\n';
+                output.textContent += '[+] Cloning repo without credentials...\n';
+                output.textContent += '[+] Stripping .git history...\n';
+                output.textContent += '[+] Renaming variables for "originality"...\n';
+                output.textContent += `[+] SUCCESS! Hypothetically saved as: ${repoUrl.split('/').pop()}_skid\n`;
+                output.textContent += '\n[!] Disclaimer: This is a joke. Please do not abuse GitHub.\n';
+            }, 2000);
+        }
+    </script>
 
-    <div class="skid-footer">
-        <p>© 2024 SKIDHUB | "All code is skidded until proven original."</p>
+    <div class="disclaimer">
+        <p>⚠️ This tool is purely satirical. SkidHub does not condone unauthorized access to repositories. ⚠️</p>
     </div>
 </body>
 </html>
